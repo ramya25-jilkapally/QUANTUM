@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QVault – Attack Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>🚨 QVault – Attack Detection</h1>
+        <div class="nav">
+            Welcome, <b>{{ user }}</b> |
+            <a href="/">Home</a> |
+            <a href="/dashboard">Dashboard</a> |
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🔐 QKD Security Analysis</h2>
+
+        <p><b>Latest QKD Session ID:</b> {{ last_session_id }}</p>
+
+        {% if last_qber is not none %}
+            <p><b>Latest QBER Value:</b> {{ last_qber }}</p>
+        {% else %}
+            <p><b>Latest QBER Value:</b> N/A</p>
+        {% endif %}
+
+        <p><b>Threshold:</b> 0.11 (11%)</p>
+
+        <hr>
+
+        {% if attack_status == "Eavesdropping Detected" %}
+            <h3 class="attack">
+                Status: ⚠️ Eavesdropping Detected
+            </h3>
+            <p>
+                High QBER indicates a possible <b>Eve attack</b>.
+                The QKD session has been terminated to protect data.
+            </p>
+        {% else %}
+            <h3 class="secure">
+                Status: ✅ Secure Communication
+            </h3>
+            <p>
+                QBER is within acceptable limits.
+                Secure quantum communication is maintained.
+            </p>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Final Results</title>
+    <style>
+.status.green { color: green; font-weight: bold; }
+.status.red { color: red; font-weight: bold; }
+.status.gray { color: gray; font-weight: bold; }
+.status.neutral { color: black; }
+</style>
+
+</head>
+<body>
+
+<h1>🔥 FINAL RESULTS PAGE 🔥</h1>
+
+<p>User: {{ user }}</p>
+<p>Encrypted Files: {{ encrypted_count }}</p>
+<p>Shared Files: {{ shared_count }}</p>
+<p>Total Files: {{ total_files }}</p>
+
+<p>QBER: {{ last_qber }}</p>
+<p>Session ID: {{ last_session_id }}</p>
+<p>Status: {{ attack_status }}</p>
+<p>
+    <b>Status:</b>
+    <span class="status {{ color | default('neutral') }}">
+    {{ status | default('N/A') }}
+</span>
+
+</p>
+
+</body>
+</html>

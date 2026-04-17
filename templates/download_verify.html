@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Download</title>
+</head>
+<body>
+
+<h2>🔐 Verify Download</h2>
+
+<p>File: <b>{{ filename }}</b></p>
+
+<form action="/download" method="post">
+    <input type="hidden" name="filename" value="{{ filename }}">
+
+    <label>Enter your login email:</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <button type="submit">Verify & Download</button>
+</form>
+
+<p><a href="/dashboard">⬅ Cancel</a></p>
+
+</body>
+</html>

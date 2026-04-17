@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QVault Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>🔐 QVault</h1>
+        <p>Quantum Secure Cloud Storage</p>
+    </div>
+
+    <div class="card" style="max-width:400px; margin:auto; margin-top:40px;">
+        <h2>🔑 User Login</h2>
+
+        <form method="post">
+            <label>Email</label><br>
+            <input type="email" name="email" placeholder="Enter registered email" required style="width:100%;"><br><br>
+
+            <label>Password</label><br>
+            <input type="password" name="password" placeholder="Enter password" required style="width:100%;"><br><br>
+
+            <button type="submit" style="width:100%;">Login Securely</button>
+        </form>
+
+        <hr>
+
+        <p style="text-align:center;">
+            New user?  
+            <a href="/register"><b>Create an account</b></a>
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

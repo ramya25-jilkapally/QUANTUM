@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Success – QVault</title>
+    <style>
+        body { font-family: Arial; background:#f4f6f9; text-align:center; padding:40px; }
+        .box {
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+            display:inline-block;
+        }
+        .btn {
+            padding:12px 20px;
+            margin:10px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:16px;
+        }
+        .dash { background:#2e86de; color:white; }
+        .back { background:#7f8c8d; color:white; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+
+<h2>✅ File Uploaded Securely</h2>
+
+<p><b>File:</b> {{ filename }}</p>
+<p><b>QBER:</b> {{ qber }}</p>
+<p><b>QKD Session ID:</b> {{ session_id }}</p>
+
+<hr>
+
+<button class="btn dash"
+        onclick="window.location.href='/dashboard'">
+    Go to Dashboard
+</button>
+
+<button class="btn back"
+        onclick="window.location.href='/'">
+    Go Back Home
+</button>
+
+</div>
+
+</body>
+</html>

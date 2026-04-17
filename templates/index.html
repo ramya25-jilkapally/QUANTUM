@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QVault – Secure File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .top-bar {
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .top-bar a {
+            color: white;
+            margin-left: 15px;
+            text-decoration: none;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .checkbox {
+            margin-top: 15px;
+        }
+
+        .info-box {
+            background: #eef3f7;
+            padding: 12px;
+            border-left: 5px solid #2980b9;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        button {
+            border: none;
+            padding: 10px 18px;
+            font-size: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .btn-upload {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #c0392b;
+            color: white;
+            margin-left: 10px;
+        }
+
+        /* PROGRESS BAR */
+        .progress-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 20px;
+            width: 0%;
+            background: #27ae60;
+            text-align: center;
+            color: white;
+            font-size: 13px;
+            line-height: 20px;
+        }
+
+        /* ENCRYPTION STATUS */
+        .status-box {
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .status-step {
+            margin: 5px 0;
+        }
+
+        .done {
+            color: green;
+            font-weight: bold;
+        }
+
+        .pending {
+            color: #555;
+        }
+
+        .alert-info {
+            margin-top: 15px;
+            padding: 10px;
+            background: #d1ecf1;
+            color: #0c5460;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    Welcome, <b>{{ session.user }}</b>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/attack-detection">Attack Detection</a>
+    <a href="/logout">Logout</a>
+</div>
+
+<div class="container">
+    <h2>🔐 QVault – Secure File Upload</h2>
+
+    <form id="uploadForm">
+        <label>Select File</label><br>
+        <input type="file" id="fileInput" required>
+
+        <div class="checkbox">
+            <input type="checkbox" id="eve">
+            <label for="eve">Simulate Eavesdropping (Eve)</label>
+        </div>
+
+        <div class="info-box">
+            • QKD (BB84) key generation<br>
+            • AES encryption<br>
+            • QBER &gt; 11% → upload blocked<br>
+            • File size: 2 KB – unlimited
+        </div>
+
+        <button type="submit" class="btn-upload">🔒 Upload</button>
+        <button type="button" class="btn-cancel" id="cancelBtn" disabled>❌ Cancel</button>
+    </form>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-container" id="progressContainer">
+        <p>Uploading file...</p>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar">0%</div>
+        </div>
+    </div>
+
+    <!-- REAL-TIME ENCRYPTION STATUS -->
+    <div class="status-box" id="statusBox" style="display:none;">
+        <div class="status-step pending" id="step1">🔑 QKD Key Generation</div>
+        <div class="status-step pending" id="step2">📊 QBER Calculation</div>
+        <div class="status-step pending" id="step3">🔐 AES Encryption</div>
+        <div class="status-step pending" id="step4">☁ Secure Cloud Storage</div>
+    </div>
+
+    <div id="statusMessage"></div>
+</div>
+
+<script>
+let xhr = null;
+
+function markDone(stepId) {
+    const el = document.getElementById(stepId);
+    el.classList.remove("pending");
+    el.classList.add("done");
+    el.innerHTML += " ✔";
+}
+
+document.getElementById("uploadForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const fileInput = document.getElementById("fileInput");
+    if (!fileInput.files.length) {
+        alert("Please select a file");
+        return;
+    }
+
+    document.getElementById("statusBox").style.display = "block";
+
+    setTimeout(() => markDone("step1"), 500);
+    setTimeout(() => markDone("step2"), 1200);
+    setTimeout(() => markDone("step3"), 2000);
+    setTimeout(() => markDone("step4"), 2800);
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+    if (document.getElementById("eve").checked) {
+        formData.append("eve", "on");
+    }
+
+    xhr = new XMLHttpRequest();
+    xhr.open("POST", "/upload", true);
+
+    document.getElementById("progressContainer").style.display = "block";
+    document.getElementById("cancelBtn").disabled = false;
+
+    xhr.upload.onprogress = function(e) {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            const bar = document.getElementById("progressBar");
+            bar.style.width = percent + "%";
+            bar.innerHTML = percent + "%";
+        }
+    };
+
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            window.location.href = "/upload-success";
+        }
+    };
+
+    xhr.onabort = function() {
+        document.getElementById("statusMessage").innerHTML =
+            "<div class='alert-info'>❌ Upload cancelled by user</div>";
+    };
+
+    xhr.send(formData);
+});
+
+document.getElementById("cancelBtn").addEventListener("click", function() {
+    if (xhr) xhr.abort();
+});
+</script>
+
+</body>
+</html>
